@@ -62,19 +62,14 @@ var draw = (function() {
         if(shape==='rectangle')
         {
           this.drawRect();
+        } else if(shape==='line') {
+          this.drawLine();
         } else {
           alert('Please choose a shape');
         }
         ctx.save();
-      
-        if(shape==='rectangle')
-        {
-          this.drawRect();
-        } else {
-          alert('Please choose a shape');
-        }
       },
-      
+         
       //Draw a rectangle
       drawRect: function(x,y,h,w) {
 
@@ -84,7 +79,17 @@ var draw = (function() {
         ctx.fillRect (x1,y1,(x2-x1),(y2-y1));
       
       },
-        
+
+      //Draw a line
+        drawLine: function() {
+        //Start by using random fill colors.
+        ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      },
+      
       getCanvas: function(){
         return canvas;
       },
@@ -124,3 +129,8 @@ var draw = (function() {
   document.getElementById('btnRect').addEventListener('click',function(){
     draw.setShape('rectangle');
 }, false);
+
+document.getElementById('btnLine').addEventListener('click',function(){
+    draw.setShape('line');
+}, false);
+
