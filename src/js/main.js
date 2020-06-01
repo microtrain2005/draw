@@ -64,6 +64,8 @@ var draw = (function() {
           this.drawRect();
         } else if(shape==='line') {
           this.drawLine();
+        } else if(shape==='circle') {
+          this.drawCircle();
         } else {
           alert('Please choose a shape');
         }
@@ -89,7 +91,24 @@ var draw = (function() {
         ctx.lineTo(x2, y2);
         ctx.stroke();
       },
-      
+
+        //Draw a circle
+        drawCircle: function() {
+
+            ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+            ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+        
+            let a = (x1-x2)
+            let b = (y1-y2)
+            let radius = Math.sqrt( a*a + b*b );
+        
+            ctx.beginPath();
+            ctx.arc(x1, y1, radius, 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.fill();
+        },
+  
+        
       getCanvas: function(){
         return canvas;
       },
@@ -133,4 +152,9 @@ var draw = (function() {
 document.getElementById('btnLine').addEventListener('click',function(){
     draw.setShape('line');
 }, false);
+
+document.getElementById('btnCircle').addEventListener('click',function(){
+    draw.setShape('circle');
+}, false);
+
 
