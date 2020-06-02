@@ -128,8 +128,10 @@ var draw = (function() {
           this.drawCircle();
         } else if(shape==='path') {
           this.drawPath();
-          } else {
-          alert('Please choose a shape');
+        } else if(shape==='triangle') {
+            this.drawTriangle();
+        } else {
+        alert('Please choose a shape');
         }
         ctx.save();
       },
@@ -183,7 +185,45 @@ var draw = (function() {
             ctx.lineTo(x, y);
             ctx.stroke();
         },
-                    
+
+      //Draw a triangle
+      drawTriangle: function(){
+
+        //x1,y1 to x2,y2 is the first line
+        //we will use the first point +/- 
+        //(depending on the direction of
+        //the mouse movement) the result of 
+        //PT to add a third point. 
+        var a = (x1-x2);
+        var b = (y1-y2);
+        var c = Math.sqrt(a*a + b*b);
+
+        var d = x1+c;
+        var e = y1+c;
+
+        //Drag left to right
+        if(x1>x2){
+            d=x1-c;
+        }
+
+        //Drag up
+        if(y1>y2){
+            e=y1-c;
+        }
+    
+        ctx.fillStyle = this.getFillColor();
+        ctx.strokeStyle = this.getStrokeColor();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+
+        ctx.lineTo(d,e);
+        ctx.lineTo(x2, y2);
+
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+        ctx.fill();
+    },
+    
         getShape: function() {
         return shape;
         },
@@ -223,6 +263,10 @@ var draw = (function() {
 
     document.getElementById('btnPath').addEventListener('click',function(){
         draw.setShape('path');
+    }, false);
+
+    document.getElementById('btnTriangle').addEventListener('click',function(){
+        draw.setShape('triangle');
     }, false);
 
   //Add a mousemove listener to the canvas
