@@ -33,7 +33,12 @@ var draw = (function() {
     //What shape are we drawing?
     shape='';
 
+    //Do we want to draw?
     isDrawing=false;
+
+    //stroke color
+    var stroke='';
+
 
     return {
         //Set the x,y coords based on current event data
@@ -71,8 +76,26 @@ var draw = (function() {
         shape = shp;
       },
 
+      //Set a random color
+      randColor: function(){
+        return '#' + Math.floor(Math.random()*16777215).toString(16);
+      },
+
+      //A setter for stroke
+      setStrokeColor: function(color){
+      stroke = color;
+      },
+
+      //A getter for stroke
+      getStrokeColor: function(){
+        if(stroke.length > 6){
+        return stroke;
+        }
+        return this.randColor();
+      },
+    
       setIsDrawing: function(bool) {
-        isDrawing = bool;
+      isDrawing = bool;
       },
       
       getIsDrawing: function() {
@@ -96,20 +119,21 @@ var draw = (function() {
         ctx.save();
       },
          
-      //Draw a rectangle
-      drawRect: function(x,y,h,w) {
-
+        //Draw a rectangle
+        // drawRect: function(x,y,h,w) {
+        drawRect: function(){
+        ctx.strokeStyle = this.getStrokeColor();
         //Start by using random fill colors.
-        ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
-      
+        ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);      
         ctx.fillRect (x1,y1,(x2-x1),(y2-y1));
-      
+        ctx.stroke();
       },
 
-      //Draw a line
+        //Draw a line
         drawLine: function() {
         //Start by using random fill colors.
-        ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+        // ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+        ctx.strokeStyle = this.getStrokeColor();
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
@@ -118,8 +142,8 @@ var draw = (function() {
 
         //Draw a circle
         drawCircle: function() {
-
-            ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+            ctx.strokeStyle = this.getStrokeColor();
+            // ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
             ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
         
             let a = (x1-x2)
@@ -135,21 +159,25 @@ var draw = (function() {
         //Draw a path
         drawPath: function() {
             //Start by using random fill colors.
-            ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+            ctx.strokeStyle = this.getStrokeColor();
+            // ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
             ctx.beginPath();
             ctx.moveTo(lx, ly);
             ctx.lineTo(x, y);
             ctx.stroke();
         },
                     
-    getShape: function() {
-    return shape;
-    },
+        getShape: function() {
+        return shape;
+        },
                   
-      getCanvas: function(){
-        return canvas;
-      },
-  
+        getCanvas: function(){
+            return canvas;
+        },
+
+     
+
+
       //Initialize the object, this must be called before anything else
       init: function() {
         canvas.width = mWidth;
@@ -163,7 +191,23 @@ var draw = (function() {
   
   //Initialize draw
   draw.init();
-  
+
+    document.getElementById('btnRect').addEventListener('click',function(){
+    draw.setShape('rectangle');
+    }, false);
+
+    document.getElementById('btnLine').addEventListener('click',function(){
+        draw.setShape('line');
+    }, false);
+
+    document.getElementById('btnCircle').addEventListener('click',function(){
+        draw.setShape('circle');
+    }, false);
+
+    document.getElementById('btnPath').addEventListener('click',function(){
+        draw.setShape('path');
+    }, false);
+
   //Add a mousemove listener to the canvas
   //When the mouse reports a change of position use the event data to
   //set and report the x,y position on the mouse.
@@ -186,21 +230,12 @@ var draw = (function() {
     draw.draw();
     draw.setIsDrawing(false);
   }, false);
-    
-  document.getElementById('btnRect').addEventListener('click',function(){
-    draw.setShape('rectangle');
-}, false);
 
-document.getElementById('btnLine').addEventListener('click',function(){
-    draw.setShape('line');
-}, false);
-
-document.getElementById('btnCircle').addEventListener('click',function(){
-    draw.setShape('circle');
-}, false);
-
-document.getElementById('btnPath').addEventListener('click',function(){
-    draw.setShape('path');
-}, false);
-
+  document.getElementById('strokeColor').addEventListener('change', function(){
+    draw.setStrokeColor(document.getElementById('strokeColor').value);
+  });
+  
+    document.getElementById('randStrokeColor').addEventListener('change', function(){
+    draw.setStrokeColor('');
+    });
 
